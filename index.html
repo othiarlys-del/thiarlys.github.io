@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Treinos do Thiarlys</title>
+  <style>
+    body{font-family:system-ui;margin:0;background:#0b1220;color:#e8eefc}
+    header{padding:26px 16px;background:#0f1a33;border-bottom:1px solid rgba(255,255,255,.08)}
+    .wrap{max-width:900px;margin:0 auto;padding:16px}
+    .card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;margin:12px 0}
+    .muted{color:#a6b3d3}
+    .btn{display:inline-block;padding:10px 12px;border-radius:12px;background:#4ea1ff;color:#07101f;font-weight:800;text-decoration:none;border:0;cursor:pointer}
+    input{padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#e8eefc;width:100%}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1 style="margin:0">Treinos do Thiarlys</h1>
+    <div class="muted">Planos de treino • Dicas • Contato</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card">
+    <h2>Fale comigo</h2>
+    <p class="muted">Digite seu nome e eu já abro o WhatsApp com a mensagem pronta.</p>
+    <input id="nome" placeholder="Seu nome" />
+    <button class="btn" onclick="enviar()">Chamar no WhatsApp</button>
+  </section>
+
+  <section class="card">
+    <h2>Serviços</h2>
+    <ul>
+      <li><b>Plano de treino</b> — <span class="muted">R$ ...</span></li>
+      <li><b>Consultoria</b> — <span class="muted">R$ ...</span></li>
+    </ul>
+  </section>
+</main>
+
+<script>
+function enviar(){
+  const nome = document.getElementById('nome').value.trim() || 'Cliente';
+  const numero = '55SEUNUMEROAQUI'; // TROQUE: ex 5511999999999
+  const msg = encodeURIComponent(`Olá! Eu sou ${nome} e quero um plano de treino.`);
+  window.open(`https://wa.me/${numero}?text=${msg}`, '_blank');
+}
+</script>
+</body>
+</html>
