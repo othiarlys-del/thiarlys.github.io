@@ -3,54 +3,55 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Plano de treino personalizado, organizado e com progressão clara. Receba seu treino no WhatsApp." />
-  <title>Plano de Treino | Thiarlys</title>
+  <meta name="description" content="Planilha de treino (R$20) para registrar séries, reps, carga e evolução. Entrega por WhatsApp." />
+  <title>Planilha de Treino | Thiarlys</title>
 
   <style>
     :root{
       --bg:#050814;
-      --panel:#0c1430;
-      --card:rgba(255,255,255,.05);
-      --stroke:rgba(255,255,255,.10);
+      --bg2:#060b18;
+      --panel:rgba(255,255,255,.05);
+      --stroke:rgba(255,255,255,.12);
       --text:#eaf0ff;
       --muted:#a9b6da;
+
       --brand:#4ea1ff;
       --brand2:#7c5cff;
       --ok:#2ee59d;
       --warn:#ffb020;
-      --danger:#ff4e5b;
-      --shadow:0 22px 70px rgba(0,0,0,.45);
+
+      --shadow: 0 26px 80px rgba(0,0,0,.55);
       --r:18px;
-      --r2:24px;
-      --max:1080px;
+      --r2:26px;
+      --max:1120px;
+
+      --glass: rgba(5,8,20,.75);
     }
+
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
       background:
-        radial-gradient(1200px 700px at 70% -10%, rgba(78,161,255,.28), transparent 60%),
-        radial-gradient(900px 600px at 8% 20%, rgba(124,92,255,.22), transparent 60%),
-        radial-gradient(700px 700px at 80% 80%, rgba(46,229,157,.10), transparent 60%),
-        linear-gradient(180deg, #040612 0%, var(--bg) 40%, #040612 100%);
+        radial-gradient(1100px 700px at 70% -10%, rgba(78,161,255,.32), transparent 60%),
+        radial-gradient(900px 650px at 10% 25%, rgba(124,92,255,.22), transparent 60%),
+        radial-gradient(900px 700px at 85% 85%, rgba(46,229,157,.10), transparent 60%),
+        linear-gradient(180deg, #040612 0%, var(--bg) 45%, #040612 100%);
       color:var(--text);
+      overflow-x:hidden;
     }
+
     a{color:inherit; text-decoration:none}
     .wrap{max-width:var(--max); margin:0 auto; padding:18px}
     .muted{color:var(--muted)}
     .tiny{font-size:12px}
-    .pill{
-      display:inline-flex; align-items:center; gap:10px;
-      padding:8px 12px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-      color:var(--muted); font-size:13px;
-    }
-    .dot{width:9px; height:9px; border-radius:99px; background:var(--ok); box-shadow:0 0 0 6px rgba(46,229,157,.14)}
+    .hide{display:none !important}
+
+    /* TOPBAR */
     .topbar{
       position:sticky; top:0; z-index:50;
-      background:rgba(5,8,20,.72);
+      background:var(--glass);
       backdrop-filter: blur(10px);
       border-bottom:1px solid rgba(255,255,255,.06);
     }
@@ -59,12 +60,14 @@
       padding:14px 18px;
     }
     .brand{
-      display:flex; align-items:center; gap:10px; font-weight:950; letter-spacing:.2px;
+      display:flex; align-items:center; gap:10px;
+      font-weight:950; letter-spacing:.2px;
+      white-space:nowrap;
     }
     .logo{
-      width:36px; height:36px; border-radius:14px;
+      width:38px; height:38px; border-radius:16px;
       background:linear-gradient(135deg, var(--brand) 0%, var(--brand2) 100%);
-      box-shadow:0 14px 40px rgba(78,161,255,.20);
+      box-shadow:0 18px 45px rgba(78,161,255,.25);
     }
     .links{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
     .links a{
@@ -72,6 +75,9 @@
       padding:8px 10px; border-radius:12px;
     }
     .links a:hover{background:rgba(255,255,255,.05); color:var(--text)}
+    @media (max-width: 900px){ .links{display:none} }
+
+    /* BUTTONS */
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:10px;
       padding:12px 14px;
@@ -79,7 +85,7 @@
       border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.04);
       color:var(--text);
-      font-weight:950; cursor:pointer;
+      font-weight:900; cursor:pointer;
       transition: transform .08s ease, background .2s ease, border .2s ease, filter .2s ease;
       user-select:none;
     }
@@ -89,13 +95,27 @@
       border:none;
       color:#07101f;
       background:linear-gradient(135deg, var(--brand) 0%, var(--brand2) 100%);
-      box-shadow:0 22px 70px rgba(78,161,255,.20);
+      box-shadow:0 26px 80px rgba(78,161,255,.22);
     }
     .btn.primary:hover{filter:brightness(1.06)}
+    .btn.whats{
+      border:none;
+      background:linear-gradient(135deg,#2ee59d 0%, #19c37d 100%);
+      color:#04130d;
+      box-shadow:0 22px 70px rgba(25,195,125,.18);
+    }
     .btn.small{padding:10px 12px; border-radius:12px; font-size:13px}
-    .btn.whats{border:none;background:linear-gradient(135deg,#2ee59d 0%, #19c37d 100%);color:#04130d}
 
     /* HERO */
+    .pill{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:8px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      color:var(--muted); font-size:13px;
+    }
+    .dot{width:9px; height:9px; border-radius:99px; background:var(--ok); box-shadow:0 0 0 6px rgba(46,229,157,.14)}
+
     .hero{padding:34px 0 10px}
     .heroGrid{
       display:grid;
@@ -103,10 +123,7 @@
       gap:16px;
       align-items:stretch;
     }
-    @media (max-width: 900px){
-      .heroGrid{grid-template-columns:1fr}
-      .links{display:none}
-    }
+    @media (max-width: 900px){ .heroGrid{grid-template-columns:1fr} }
 
     .panel{
       border:1px solid rgba(255,255,255,.10);
@@ -129,6 +146,7 @@
     }
     .heroText{font-size:16px; line-height:1.6; color:var(--muted); margin:0 0 14px 0}
     .ctaRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+
     .stats{display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:18px}
     @media (max-width: 560px){ .stats{grid-template-columns:1fr} }
     .stat{
@@ -140,7 +158,6 @@
     .stat b{font-size:18px}
     .stat div{color:var(--muted); font-size:12px; margin-top:4px}
 
-    /* Right */
     .heroRight{padding:22px; display:flex; flex-direction:column; gap:12px}
     .miniCard{
       border:1px solid rgba(255,255,255,.10);
@@ -150,13 +167,12 @@
     }
     .miniTop{display:flex; align-items:center; justify-content:space-between; gap:10px}
     .tag{
-      font-size:12px; color:#07101f; font-weight:950;
+      font-size:12px; color:#07101f; font-weight:1000;
       padding:6px 10px; border-radius:999px;
       background:rgba(255,176,32,.95);
     }
-    .list{margin:10px 0 0 0; padding-left:18px; color:var(--muted); line-height:1.6}
     .hr{height:1px; background:rgba(255,255,255,.08); margin:10px 0}
-
+    .list{margin:10px 0 0 0; padding-left:18px; color:var(--muted); line-height:1.65}
     input, select{
       width:100%;
       padding:12px;
@@ -168,15 +184,19 @@
       outline:none;
     }
 
-    /* Sections */
+    /* SECTIONS */
     section{padding:14px 0}
     .sectionTitle{
       display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap;
-      margin:20px 0 12px 0;
+      margin:22px 0 12px 0;
     }
     .sectionTitle h2{margin:0; font-size:28px; letter-spacing:-.5px}
     .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:12px}
-    @media (max-width: 900px){ .grid3{grid-template-columns:1fr} }
+    .grid2{display:grid; grid-template-columns:repeat(2, 1fr); gap:12px}
+    @media (max-width: 900px){
+      .grid3{grid-template-columns:1fr}
+      .grid2{grid-template-columns:1fr}
+    }
 
     .card{
       border:1px solid rgba(255,255,255,.10);
@@ -186,59 +206,114 @@
     }
     .card h3{margin:0 0 8px 0}
     .icon{
-      width:40px; height:40px; border-radius:14px;
+      width:42px; height:42px; border-radius:16px;
       display:grid; place-items:center;
       background:rgba(78,161,255,.12);
       border:1px solid rgba(78,161,255,.25);
       margin-bottom:12px;
+      font-weight:1000;
     }
-    .twoCol{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    @media (max-width: 900px){ .twoCol{grid-template-columns:1fr} }
 
-    /* Offer (single product) */
+    /* OFFER */
     .offer{
       position:relative;
       border-radius: var(--r2);
       padding:18px;
       border:1px solid rgba(255,255,255,.10);
       background:linear-gradient(135deg, rgba(78,161,255,.22) 0%, rgba(124,92,255,.18) 55%, rgba(255,255,255,.04) 100%);
-      box-shadow:0 22px 70px rgba(78,161,255,.18);
+      box-shadow:0 24px 85px rgba(78,161,255,.18);
       overflow:hidden;
     }
-    .offerTop{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap}
-    .price{
-      font-size:42px;
-      font-weight:1000;
-      letter-spacing:-1px;
-      margin:10px 0 6px 0;
-    }
-    .strike{opacity:.6; text-decoration: line-through}
+    .offerTop{display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap}
     .badge{
       display:inline-flex; align-items:center; gap:8px;
       padding:8px 12px; border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
       background:rgba(255,255,255,.05);
-      font-weight:900;
+      font-weight:950;
       font-size:13px;
     }
-
+    .price{
+      font-size:46px;
+      font-weight:1000;
+      letter-spacing:-1px;
+      margin:10px 0 6px 0;
+    }
+    .sub{color:var(--muted); font-size:13px; line-height:1.6}
     .check{
       display:flex; gap:10px; align-items:flex-start; color:var(--muted);
-      margin-top:10px; line-height:1.55;
+      margin-top:10px; line-height:1.6;
     }
     .check svg{flex:0 0 auto; margin-top:2px}
 
-    /* Proof */
-    .quote{
-      font-size:15px; line-height:1.6; color:var(--muted);
+    /* BEFORE / AFTER SLIDER */
+    .baWrap{padding:0; overflow:hidden}
+    .baHeader{padding:14px 16px 0 16px}
+    .baTitle{font-weight:1000}
+    .baSub{color:var(--muted); font-size:13px; margin-top:6px; line-height:1.5}
+    .ba{
+      position:relative;
+      width:100%;
+      aspect-ratio: 1 / 1;
+      background:#000;
+      margin-top:12px;
+      overflow:hidden;
+      border-top:1px solid rgba(255,255,255,.08);
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
-    .name{margin-top:10px; font-weight:950}
-    .chipRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
-    .chip{
-      padding:8px 12px; border-radius:999px;
+    .ba img{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      user-select:none;
+      -webkit-user-drag:none;
+      cursor: zoom-in;
+    }
+    .ba .after{
+      clip-path: inset(0 0 0 var(--cut, 50%));
+    }
+    .ba .line{
+      position:absolute; top:0; bottom:0;
+      left:var(--cut, 50%);
+      width:2px;
+      background:rgba(255,255,255,.75);
+      box-shadow:0 0 0 6px rgba(255,255,255,.08);
+      pointer-events:none;
+    }
+    .ba .knob{
+      position:absolute;
+      top:50%;
+      left:var(--cut, 50%);
+      transform: translate(-50%,-50%);
+      width:44px; height:44px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.25);
+      background:rgba(5,8,20,.65);
+      backdrop-filter: blur(10px);
+      display:grid; place-items:center;
+      pointer-events:none;
+    }
+    .ba .knob span{
+      font-weight:1000;
+      font-size:12px;
+      color:rgba(255,255,255,.95);
+    }
+    .baCtrl{
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+      padding:12px 16px;
+    }
+    .baCtrl input[type="range"]{
+      width:100%;
+      accent-color: var(--brand);
+    }
+    .pillMini{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.03);
-      color:var(--muted); font-size:13px;
+      background:rgba(0,0,0,.18);
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
     }
 
     /* FAQ */
@@ -251,7 +326,48 @@
     details summary{cursor:pointer; font-weight:950}
     details p{margin:8px 0 0 0; color:var(--muted); line-height:1.6}
 
-    /* Sticky Whats */
+    /* LIGHTBOX */
+    .lightbox{
+      position:fixed; inset:0; z-index:9999;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(8px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+    .lightbox.on{display:flex}
+    .lightbox .box{
+      max-width:min(980px, 96vw);
+      width:100%;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(5,8,20,.75);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .lightbox .top{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .lightbox .top b{font-weight:950}
+    .lightbox .top button{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      border-radius:12px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .lightbox img{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    /* Sticky WhatsApp */
     .stickyCta{
       position:fixed; right:16px; bottom:16px; z-index:999;
       display:flex; gap:10px; align-items:center;
@@ -265,7 +381,7 @@
       backdrop-filter: blur(10px);
       color:var(--muted);
       box-shadow: var(--shadow);
-      max-width: 220px;
+      max-width: 280px;
       font-size:13px;
     }
     @media (min-width: 820px){ .bubble{display:block} }
@@ -273,55 +389,69 @@
     /* Reveal */
     .reveal{opacity:0; transform: translateY(10px); transition: opacity .55s ease, transform .55s ease}
     .reveal.on{opacity:1; transform: translateY(0)}
+
+    /* Footer */
+    footer{
+      padding:26px 0 34px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none !important; animation:none !important; scroll-behavior:auto !important}
+    }
   </style>
 </head>
 
 <body>
+  <!-- TOPBAR -->
   <div class="topbar">
     <div class="wrap nav">
       <div class="brand">
         <div class="logo"></div>
-        <div>Thiarlys • Plano de Treino</div>
+        <div>Thiarlys • Planilha de Treino</div>
       </div>
 
       <nav class="links">
-        <a href="#oferta">Oferta</a>
-        <a href="#como">Como funciona</a>
-        <a href="#prova">Resultados</a>
+        <a href="#produto">Produto</a>
+        <a href="#evolucao">Evolução</a>
+        <a href="#como">Compra</a>
         <a href="#faq">FAQ</a>
       </nav>
 
-      <button class="btn whats small" id="btnTopZap">WhatsApp</button>
+      <button class="btn whats small" id="btnTopZap">Comprar no WhatsApp</button>
     </div>
   </div>
 
+  <!-- HERO -->
   <div class="wrap hero">
     <div class="heroGrid">
       <div class="panel heroLeft reveal">
-        <div class="pill"><span class="dot"></span> Plano enxuto, intenso e com progressão (sem “treino aleatório”)</div>
-        <h1>Seu <span class="grad">plano de treino</span> pronto pra executar — e evoluir semana após semana.</h1>
+        <div class="pill"><span class="dot"></span> Produto digital • planilha para registrar treino e evolução</div>
+        <h1>Treine com <span class="grad">clareza</span>: registre cargas, reps e progresso sem bagunça.</h1>
         <p class="heroText">
-          Você recebe um treino organizado (exercícios, séries, reps e descanso) + regra simples de progressão.
-          Ideal pra quem quer resultado de verdade sem depender de “sorte” no treino.
+          Você para de “chutar” o que fez no último treino. A planilha organiza seu dia, registra histórico e te dá visão de evolução.
+          Perfeita pra usar no celular (Google Sheets) ou no PC (Excel).
         </p>
 
         <div class="ctaRow">
-          <button class="btn whats" id="btnHeroZap">Quero meu plano no WhatsApp</button>
-          <a class="btn" href="#oferta">Ver oferta</a>
+          <button class="btn whats" id="btnHeroZap">Quero comprar por R$ <span id="precoHero">20</span></button>
+          <a class="btn primary" href="#produto">Ver o que vem</a>
         </div>
 
         <div class="stats">
           <div class="stat">
-            <b>Baixo volume</b>
-            <div>Curto e eficiente (2–3 séries valendo)</div>
+            <b>Checklist</b>
+            <div>marca séries concluídas</div>
           </div>
           <div class="stat">
-            <b>Alta intensidade</b>
-            <div>RPE 8–9 (1–2 reps na reserva)</div>
+            <b>Histórico</b>
+            <div>cargas e reps guardadas</div>
           </div>
           <div class="stat">
-            <b>Progressão clara</b>
-            <div>Reps/carga sem adivinhação</div>
+            <b>Resumo</b>
+            <div>visão semanal/mensal</div>
           </div>
         </div>
       </div>
@@ -330,23 +460,22 @@
         <div class="miniCard">
           <div class="miniTop">
             <div>
-              <div style="font-weight:950">Esse plano é pra você se:</div>
-              <div class="muted tiny">Marca as opções e vem pro WhatsApp</div>
+              <div style="font-weight:1000">O que você recebe</div>
+              <div class="muted tiny">Entrega por WhatsApp/Drive</div>
             </div>
-            <div class="tag">Venda direta</div>
+            <div class="tag">R$ 20</div>
           </div>
           <div class="hr"></div>
-
           <ul class="list">
-            <li>Você treina, mas sente que “não progride”</li>
-            <li>Você quer um treino curto e pesado</li>
-            <li>Você quer parar de trocar treino toda semana</li>
-            <li>Você quer um plano simples de seguir</li>
+            <li>Planilha pronta (Excel + Google Sheets)</li>
+            <li>Campos: séries, reps, carga, descanso, RPE</li>
+            <li>Histórico + resumo de evolução</li>
+            <li>Guia rápido de uso (1 página)</li>
           </ul>
         </div>
 
         <div class="miniCard">
-          <div style="font-weight:950">Pedir meu plano</div>
+          <div style="font-weight:1000">Pedido rápido</div>
           <div class="muted tiny">Mensagem automática no WhatsApp</div>
           <div class="hr"></div>
 
@@ -355,58 +484,52 @@
 
           <label class="tiny muted" style="margin-top:10px; display:block;">Objetivo</label>
           <select id="objetivo">
-            <option value="Hipertrofia">Hipertrofia (ganhar massa)</option>
+            <option value="Hipertrofia">Hipertrofia</option>
             <option value="Emagrecimento">Emagrecimento</option>
             <option value="Força">Força</option>
             <option value="Condicionamento">Condicionamento</option>
           </select>
 
-          <label class="tiny muted" style="margin-top:10px; display:block;">Dias por semana</label>
-          <select id="dias">
-            <option value="3x">3x</option>
-            <option value="4x" selected>4x (recomendado)</option>
-            <option value="5x">5x</option>
+          <label class="tiny muted" style="margin-top:10px; display:block;">Usar em:</label>
+          <select id="uso">
+            <option value="Celular (Google Sheets)">Celular (Google Sheets)</option>
+            <option value="PC (Excel)">PC (Excel)</option>
+            <option value="Ambos">Ambos</option>
           </select>
 
           <div class="ctaRow" style="margin-top:12px">
-            <button class="btn whats" id="btnMiniZap">Enviar pedido</button>
-            <a class="btn" href="#faq">Tirar dúvidas</a>
-          </div>
-
-          <div class="chipRow">
-            <div class="chip">Entrega rápida</div>
-            <div class="chip">Organizado</div>
-            <div class="chip">Sem enrolação</div>
+            <button class="btn primary" id="btnAsk">Tirar dúvida</button>
+            <button class="btn whats" id="btnMiniZap">Comprar</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- OFERTA ÚNICA (1 produto) -->
+  <!-- PRODUTO -->
   <div class="wrap">
-    <section id="oferta">
+    <section id="produto">
       <div class="sectionTitle">
-        <h2 class="reveal">Oferta</h2>
-        <div class="muted tiny reveal">Um produto só. Uma decisão simples.</div>
+        <h2 class="reveal">Produto</h2>
+        <div class="muted tiny reveal">Planilha (template) para organizar e registrar treinos.</div>
       </div>
 
       <div class="offer reveal">
         <div class="offerTop">
           <div>
-            <div class="badge">Plano de Treino Personalizado</div>
-            <div class="price">R$ <span id="preco">149</span></div>
-            <div class="muted tiny">*Você pode mudar o preço em 5 segundos (eu te mostro onde).</div>
+            <div class="badge">Planilha de Treino (Premium)</div>
+            <div class="price">R$ <span id="preco">20</span></div>
+            <div class="sub">Entrega por WhatsApp/Drive após confirmação do pagamento.</div>
           </div>
 
-          <div style="max-width:360px">
-            <div class="muted">
-              Você recebe um plano completo (exercícios, séries, reps, descanso) com
-              progressão clara e ajustes de acordo com seu objetivo.
+          <div style="max-width:420px">
+            <div class="sub">
+              Você compra e recebe o arquivo + instruções rápidas de uso.
+              Suporte limitado a dúvidas de uso da planilha.
             </div>
             <div class="ctaRow" style="margin-top:12px">
-              <button class="btn primary" id="btnBuy">Quero fechar agora</button>
-              <button class="btn" id="btnAsk">Quero tirar uma dúvida</button>
+              <button class="btn whats" id="btnBuy">Comprar agora</button>
+              <a class="btn" href="#como">Como funciona</a>
             </div>
           </div>
         </div>
@@ -415,109 +538,132 @@
 
         <div class="grid3" style="margin-top:12px">
           <div class="card" style="background:rgba(0,0,0,.18)">
-            <h3>O que vem no plano</h3>
+            <h3>O que tem dentro</h3>
             <div class="check">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M20 6L9 17l-5-5" stroke="white" opacity=".85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Estrutura semanal (3x/4x/5x) + divisão ideal pro seu objetivo
+              Aba “Treinos” por dia (checklist)
             </div>
             <div class="check">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M20 6L9 17l-5-5" stroke="white" opacity=".85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Séries, reps, descanso e dicas de execução
+              Aba “Histórico” (carga/reps/notas)
             </div>
             <div class="check">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M20 6L9 17l-5-5" stroke="white" opacity=".85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Regra de progressão (reps/carga/RPE) — sem adivinhação
+              Aba “Resumo” (evolução semanal/mensal)
             </div>
           </div>
 
           <div class="card" style="background:rgba(0,0,0,.18)">
-            <h3>Garantia</h3>
-            <div class="muted">
-              Se você não curtir a organização do plano, eu ajusto uma vez sem custo.
-              (Isso reduz o risco e aumenta sua confiança.)
-            </div>
-            <div class="check">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2l8 4v6c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4z" stroke="white" opacity=".85" stroke-width="2"/>
-              </svg>
-              Ajuste extra incluso (1x)
-            </div>
+            <h3>Por que funciona</h3>
+            <ul class="list">
+              <li>Você repete o que dá resultado</li>
+              <li>Você registra progressão real</li>
+              <li>Você evita “treino aleatório”</li>
+            </ul>
           </div>
 
           <div class="card" style="background:rgba(0,0,0,.18)">
             <h3>Entrega</h3>
-            <div class="muted">
-              Você recebe seu plano pelo WhatsApp (PDF/print) e eu explico a progressão.
+            <div class="sub">
+              Envio por WhatsApp/Drive após confirmação. Inclui guia rápido de uso.
             </div>
             <div class="check">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M12 6v6l4 2" stroke="white" opacity=".85" stroke-width="2" stroke-linecap="round"/>
                 <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="white" opacity=".85" stroke-width="2"/>
               </svg>
-              Entrega rápida (combina no WhatsApp)
+              Você recebe e já consegue usar no mesmo dia
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- COMO FUNCIONA -->
+    <!-- EVOLUÇÃO (B/A SLIDERS) -->
+    <section id="evolucao">
+      <div class="sectionTitle">
+        <h2 class="reveal">Evolução</h2>
+        <div class="muted tiny reveal">Arraste o slider para comparar “antes/depois”.</div>
+      </div>
+
+      <div class="grid2">
+        <!-- BA 1 -->
+        <div class="card baWrap reveal" data-ba="1">
+          <div class="baHeader">
+            <div class="baTitle">Aluno A. (iniciais)</div>
+            <div class="baSub">Exemplo de evolução registrada ao longo do tempo. Clique na imagem para ampliar.</div>
+          </div>
+
+          <div class="ba" style="--cut:50%;">
+            <img class="before" src="assets/evolucao_01.jpg" alt="Antes" data-lightbox="Evolução 01"/>
+            <img class="after"  src="assets/evolucao_01.jpg" alt="Depois" data-lightbox="Evolução 01"/>
+            <div class="line"></div>
+            <div class="knob"><span class="pct">50%</span></div>
+          </div>
+
+          <div class="baCtrl">
+            <span class="pillMini">Antes</span>
+            <input class="range" type="range" min="0" max="100" value="50" />
+            <span class="pillMini">Depois</span>
+          </div>
+        </div>
+
+        <!-- BA 2 -->
+        <div class="card baWrap reveal" data-ba="2">
+          <div class="baHeader">
+            <div class="baTitle">Aluno B. (iniciais)</div>
+            <div class="baSub">Mais consistência, melhor execução e registro do treino. Clique para ampliar.</div>
+          </div>
+
+          <div class="ba" style="--cut:50%;">
+            <img class="before" src="assets/evolucao_02.jpg" alt="Antes" data-lightbox="Evolução 02"/>
+            <img class="after"  src="assets/evolucao_02.jpg" alt="Depois" data-lightbox="Evolução 02"/>
+            <div class="line"></div>
+            <div class="knob"><span class="pct">50%</span></div>
+          </div>
+
+          <div class="baCtrl">
+            <span class="pillMini">Antes</span>
+            <input class="range" type="range" min="0" max="100" value="50" />
+            <span class="pillMini">Depois</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="muted tiny reveal" style="margin-top:10px">
+        Dica: se você tiver fotos “antes” e “depois” separadas, eu te mando a versão que usa dois arquivos por aluno (antes.jpg + depois.jpg).
+      </div>
+    </section>
+
+    <!-- COMO COMPRAR -->
     <section id="como">
       <div class="sectionTitle">
-        <h2 class="reveal">Como funciona (3 passos)</h2>
-        <div class="muted tiny reveal">Clareza = mais vendas.</div>
+        <h2 class="reveal">Como comprar</h2>
+        <div class="muted tiny reveal">Rápido e direto.</div>
       </div>
 
       <div class="grid3">
         <div class="card reveal">
-          <div class="icon">①</div>
-          <h3>Você me chama</h3>
-          <div class="muted">Me diz objetivo, dias/semana, nível, equipamentos e limitações.</div>
+          <div class="icon">1</div>
+          <h3>Chama no WhatsApp</h3>
+          <div class="muted">Eu mando as instruções de pagamento.</div>
         </div>
         <div class="card reveal">
-          <div class="icon">②</div>
-          <h3>Eu monto seu plano</h3>
-          <div class="muted">Treino organizado com progressão e dicas pra executar certo.</div>
+          <div class="icon">2</div>
+          <h3>Pagamento</h3>
+          <div class="muted">Pix/transferência (você escolhe).</div>
         </div>
         <div class="card reveal">
-          <div class="icon">③</div>
-          <h3>Você executa e progride</h3>
-          <div class="muted">Você segue a regra de progressão e evolui com consistência.</div>
+          <div class="icon">3</div>
+          <h3>Entrega</h3>
+          <div class="muted">Eu envio a planilha + guia (WhatsApp/Drive).</div>
         </div>
-      </div>
-    </section>
-
-    <!-- PROVA -->
-    <section id="prova">
-      <div class="sectionTitle">
-        <h2 class="reveal">Resultados (prova social)</h2>
-        <div class="muted tiny reveal">Depois você troca por prints reais do WhatsApp.</div>
-      </div>
-
-      <div class="twoCol">
-        <div class="card reveal">
-          <div class="quote">“O treino ficou curto e pesado. Em 3 semanas eu já subi carga no supino e no agacho.”</div>
-          <div class="name">— Aluno (exemplo)</div>
-          <div class="muted tiny">*Substitua por depoimento real quando tiver.</div>
-        </div>
-        <div class="card reveal">
-          <div class="quote">“A regra de progressão é o que faltava. Agora eu sei o que fazer em toda sessão.”</div>
-          <div class="name">— Aluno (exemplo)</div>
-          <div class="muted tiny">*Substitua por depoimento real quando tiver.</div>
-        </div>
-      </div>
-
-      <div class="chipRow reveal">
-        <div class="chip">Treino estruturado</div>
-        <div class="chip">Progressão simples</div>
-        <div class="chip">Execução correta</div>
-        <div class="chip">Consistência</div>
       </div>
     </section>
 
@@ -525,76 +671,159 @@
     <section id="faq">
       <div class="sectionTitle">
         <h2 class="reveal">FAQ</h2>
-        <div class="muted tiny reveal">Remove objeções e fecha no WhatsApp.</div>
+        <div class="muted tiny reveal">Dúvidas comuns.</div>
       </div>
 
       <div class="grid3">
         <details class="reveal">
-          <summary>Serve pra iniciante?</summary>
-          <p>Sim. Eu adapto exercícios e intensidade pro seu nível, pra você evoluir com técnica.</p>
+          <summary>Funciona no celular?</summary>
+          <p>Sim. Você pode usar no Google Sheets. Também funciona no Excel no PC.</p>
         </details>
         <details class="reveal">
-          <summary>Preciso treinar 5–6 dias?</summary>
-          <p>Não. 3x ou 4x bem feito já dá resultado. Eu monto o melhor pro seu objetivo.</p>
+          <summary>É consultoria?</summary>
+          <p>Não. É um produto digital (planilha/template) para organização e registro do treino.</p>
         </details>
         <details class="reveal">
-          <summary>Como eu recebo o plano?</summary>
-          <p>Eu envio no WhatsApp em formato organizado (PDF/print), com instruções de progressão.</p>
+          <summary>Como recebo?</summary>
+          <p>Após confirmar o pagamento, eu envio por WhatsApp/Drive + um guia rápido de uso.</p>
         </details>
-      </div>
-
-      <div class="offer reveal" style="margin-top:14px">
-        <div class="offerTop">
-          <div>
-            <div class="badge">Fechar agora</div>
-            <div class="muted">Me chama e eu já te falo como vai ser seu plano.</div>
-          </div>
-          <div class="ctaRow">
-            <button class="btn whats" id="btnBottomZap">Chamar no WhatsApp</button>
-            <a class="btn" href="#oferta">Ver oferta</a>
-          </div>
-        </div>
       </div>
     </section>
 
-    <footer class="muted tiny" style="padding:26px 0 34px">
-      © <span id="year"></span> Thiarlys • Conteúdo informativo (não substitui acompanhamento profissional). • WhatsApp: <b>+55 28 99932-6660</b>
+    <footer class="reveal">
+      © <span id="year"></span> Thiarlys • WhatsApp: <b>+55 28 99932-6660</b><br/>
+      Observação: produto digital (template). Para usar imagens de alunos, tenha autorização. Resultados variam por consistência, dieta e sono.
     </footer>
   </div>
 
   <!-- Sticky WhatsApp -->
   <div class="stickyCta">
-    <div class="bubble">Quer seu plano? Me chama aqui.</div>
+    <div class="bubble">Quer comprar a planilha? Me chama aqui.</div>
     <button class="btn whats" id="btnSticky">WhatsApp</button>
   </div>
 
-  <script>
-    const WHATSAPP_NUMBER = "5528999326660";
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <div class="box">
+      <div class="top">
+        <b id="lbTitle">Imagem</b>
+        <button id="lbClose">Fechar</button>
+      </div>
+      <img id="lbImg" alt="Imagem ampliada" />
+    </div>
+  </div>
 
+  <script>
+    // ===== CONFIG =====
+    const WHATSAPP_NUMBER = "5528999326660";
+    const PRICE = 20;
+
+    // ===== WhatsApp helpers =====
     function openWhats(extra=""){
       const nome = (document.getElementById("nome")?.value || "").trim() || "Cliente";
       const objetivo = (document.getElementById("objetivo")?.value || "Hipertrofia").trim();
-      const dias = (document.getElementById("dias")?.value || "4x").trim();
-      const msg = `Olá! Eu sou ${nome}. Quero um PLANO DE TREINO (${objetivo}) para ${dias}/semana. ${extra}`.trim();
+      const uso = (document.getElementById("uso")?.value || "Celular (Google Sheets)").trim();
+
+      const msg =
+        `Olá! Eu sou ${nome}. Quero COMPRAR a Planilha de Treino (R$ ${PRICE}).\\n` +
+        `Objetivo: ${objetivo}\\n` +
+        `Vou usar em: ${uso}\\n` +
+        `${extra}`.trim();
+
       window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
     }
 
     document.getElementById("btnTopZap").onclick = () => openWhats("Vim pelo site.");
-    document.getElementById("btnHeroZap").onclick = () => openWhats("Quero fechar.");
-    document.getElementById("btnMiniZap").onclick = () => openWhats("Quero preço e como funciona.");
-    document.getElementById("btnBottomZap").onclick = () => openWhats("Quero começar hoje.");
-    document.getElementById("btnSticky").onclick = () => openWhats("Quero meu plano.");
+    document.getElementById("btnHeroZap").onclick = () => openWhats("Quero comprar agora.");
+    document.getElementById("btnMiniZap").onclick = () => openWhats("Me envie as instruções de pagamento e entrega.");
+    document.getElementById("btnBuy").onclick = () => openWhats("Quero comprar. Como faço o pagamento?");
+    document.getElementById("btnAsk").onclick = () => openWhats("Tenho uma dúvida antes de comprar.");
+    document.getElementById("btnSticky").onclick = () => openWhats("Quero comprar a planilha.");
 
-    document.getElementById("btnBuy").onclick = () => openWhats("Tenho interesse no PLANO. Qual o passo a passo pra pagar?");
-    document.getElementById("btnAsk").onclick = () => openWhats("Tenho uma dúvida antes de fechar.");
+    // Set price in hero (só visual)
+    document.getElementById("precoHero").textContent = String(PRICE);
+    document.getElementById("preco").textContent = String(PRICE);
 
+    // ===== Year =====
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // Reveal animation
+    // ===== Reveal animation =====
     const obs = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add("on"); });
     }, {threshold: 0.12});
     document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+
+    // ===== Before/After sliders =====
+    document.querySelectorAll(".baWrap").forEach((wrap)=>{
+      const ba = wrap.querySelector(".ba");
+      const range = wrap.querySelector(".range");
+      const pctEl = wrap.querySelector(".pct");
+
+      function set(v){
+        ba.style.setProperty("--cut", v + "%");
+        pctEl.textContent = v + "%";
+      }
+      set(range.value);
+
+      range.addEventListener("input", () => set(range.value));
+
+      // Drag anywhere on image to move slider (profissional)
+      let dragging = false;
+
+      function pointerToValue(clientX){
+        const rect = ba.getBoundingClientRect();
+        const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+        return Math.round((x / rect.width) * 100);
+      }
+
+      ba.addEventListener("pointerdown", (e)=>{
+        dragging = true;
+        ba.setPointerCapture(e.pointerId);
+        const v = pointerToValue(e.clientX);
+        range.value = v;
+        set(v);
+      });
+
+      ba.addEventListener("pointermove", (e)=>{
+        if(!dragging) return;
+        const v = pointerToValue(e.clientX);
+        range.value = v;
+        set(v);
+      });
+
+      ba.addEventListener("pointerup", ()=> dragging = false);
+      ba.addEventListener("pointercancel", ()=> dragging = false);
+    });
+
+    // ===== Lightbox =====
+    const lb = document.getElementById("lightbox");
+    const lbImg = document.getElementById("lbImg");
+    const lbTitle = document.getElementById("lbTitle");
+    const lbClose = document.getElementById("lbClose");
+
+    function openLightbox(src, title){
+      lbImg.src = src;
+      lbTitle.textContent = title || "Imagem";
+      lb.classList.add("on");
+    }
+    function closeLightbox(){
+      lb.classList.remove("on");
+      lbImg.src = "";
+    }
+
+    document.querySelectorAll("[data-lightbox]").forEach((img)=>{
+      img.addEventListener("click", ()=>{
+        openLightbox(img.getAttribute("src"), img.getAttribute("data-lightbox"));
+      });
+    });
+
+    lbClose.addEventListener("click", closeLightbox);
+    lb.addEventListener("click", (e)=>{
+      if(e.target === lb) closeLightbox();
+    });
+    window.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape") closeLightbox();
+    });
   </script>
 </body>
 </html>
