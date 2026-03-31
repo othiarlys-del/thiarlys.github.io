@@ -1,829 +1,426 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Planilha de treino (R$20) para registrar séries, reps, carga e evolução. Entrega por WhatsApp." />
-  <title>Planilha de Treino | Thiarlys</title>
-
-  <style>
-    :root{
-      --bg:#050814;
-      --bg2:#060b18;
-      --panel:rgba(255,255,255,.05);
-      --stroke:rgba(255,255,255,.12);
-      --text:#eaf0ff;
-      --muted:#a9b6da;
-
-      --brand:#4ea1ff;
-      --brand2:#7c5cff;
-      --ok:#2ee59d;
-      --warn:#ffb020;
-
-      --shadow: 0 26px 80px rgba(0,0,0,.55);
-      --r:18px;
-      --r2:26px;
-      --max:1120px;
-
-      --glass: rgba(5,8,20,.75);
-    }
-
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:
-        radial-gradient(1100px 700px at 70% -10%, rgba(78,161,255,.32), transparent 60%),
-        radial-gradient(900px 650px at 10% 25%, rgba(124,92,255,.22), transparent 60%),
-        radial-gradient(900px 700px at 85% 85%, rgba(46,229,157,.10), transparent 60%),
-        linear-gradient(180deg, #040612 0%, var(--bg) 45%, #040612 100%);
-      color:var(--text);
-      overflow-x:hidden;
-    }
-
-    a{color:inherit; text-decoration:none}
-    .wrap{max-width:var(--max); margin:0 auto; padding:18px}
-    .muted{color:var(--muted)}
-    .tiny{font-size:12px}
-    .hide{display:none !important}
-
-    /* TOPBAR */
-    .topbar{
-      position:sticky; top:0; z-index:50;
-      background:var(--glass);
-      backdrop-filter: blur(10px);
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-    .nav{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding:14px 18px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      font-weight:950; letter-spacing:.2px;
-      white-space:nowrap;
-    }
-    .logo{
-      width:38px; height:38px; border-radius:16px;
-      background:linear-gradient(135deg, var(--brand) 0%, var(--brand2) 100%);
-      box-shadow:0 18px 45px rgba(78,161,255,.25);
-    }
-    .links{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .links a{
-      font-size:13px; color:var(--muted);
-      padding:8px 10px; border-radius:12px;
-    }
-    .links a:hover{background:rgba(255,255,255,.05); color:var(--text)}
-    @media (max-width: 900px){ .links{display:none} }
-
-    /* BUTTONS */
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-weight:900; cursor:pointer;
-      transition: transform .08s ease, background .2s ease, border .2s ease, filter .2s ease;
-      user-select:none;
-    }
-    .btn:hover{background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.18)}
-    .btn:active{transform:scale(.98)}
-    .btn.primary{
-      border:none;
-      color:#07101f;
-      background:linear-gradient(135deg, var(--brand) 0%, var(--brand2) 100%);
-      box-shadow:0 26px 80px rgba(78,161,255,.22);
-    }
-    .btn.primary:hover{filter:brightness(1.06)}
-    .btn.whats{
-      border:none;
-      background:linear-gradient(135deg,#2ee59d 0%, #19c37d 100%);
-      color:#04130d;
-      box-shadow:0 22px 70px rgba(25,195,125,.18);
-    }
-    .btn.small{padding:10px 12px; border-radius:12px; font-size:13px}
-
-    /* HERO */
-    .pill{
-      display:inline-flex; align-items:center; gap:10px;
-      padding:8px 12px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-      color:var(--muted); font-size:13px;
-    }
-    .dot{width:9px; height:9px; border-radius:99px; background:var(--ok); box-shadow:0 0 0 6px rgba(46,229,157,.14)}
-
-    .hero{padding:34px 0 10px}
-    .heroGrid{
-      display:grid;
-      grid-template-columns: 1.12fr .88fr;
-      gap:16px;
-      align-items:stretch;
-    }
-    @media (max-width: 900px){ .heroGrid{grid-template-columns:1fr} }
-
-    .panel{
-      border:1px solid rgba(255,255,255,.10);
-      background:linear-gradient(180deg, rgba(255,255,255,.06) 0%, rgba(255,255,255,.03) 100%);
-      border-radius: var(--r2);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .heroLeft{padding:22px}
-    h1{
-      margin:14px 0 10px 0;
-      font-size:48px;
-      line-height:1.03;
-      letter-spacing:-1px;
-    }
-    @media (max-width: 560px){ h1{font-size:38px} }
-    .grad{
-      background:linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,.88) 30%, rgba(78,161,255,.95) 70%, rgba(124,92,255,.95) 100%);
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-    }
-    .heroText{font-size:16px; line-height:1.6; color:var(--muted); margin:0 0 14px 0}
-    .ctaRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
-
-    .stats{display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:18px}
-    @media (max-width: 560px){ .stats{grid-template-columns:1fr} }
-    .stat{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      border-radius:16px;
-      padding:12px;
-    }
-    .stat b{font-size:18px}
-    .stat div{color:var(--muted); font-size:12px; margin-top:4px}
-
-    .heroRight{padding:22px; display:flex; flex-direction:column; gap:12px}
-    .miniCard{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.18);
-      border-radius:18px;
-      padding:14px;
-    }
-    .miniTop{display:flex; align-items:center; justify-content:space-between; gap:10px}
-    .tag{
-      font-size:12px; color:#07101f; font-weight:1000;
-      padding:6px 10px; border-radius:999px;
-      background:rgba(255,176,32,.95);
-    }
-    .hr{height:1px; background:rgba(255,255,255,.08); margin:10px 0}
-    .list{margin:10px 0 0 0; padding-left:18px; color:var(--muted); line-height:1.65}
-    input, select{
-      width:100%;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      margin-top:8px;
-      outline:none;
-    }
-
-    /* SECTIONS */
-    section{padding:14px 0}
-    .sectionTitle{
-      display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap;
-      margin:22px 0 12px 0;
-    }
-    .sectionTitle h2{margin:0; font-size:28px; letter-spacing:-.5px}
-    .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:12px}
-    .grid2{display:grid; grid-template-columns:repeat(2, 1fr); gap:12px}
-    @media (max-width: 900px){
-      .grid3{grid-template-columns:1fr}
-      .grid2{grid-template-columns:1fr}
-    }
-
-    .card{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      border-radius: var(--r);
-      padding:16px;
-    }
-    .card h3{margin:0 0 8px 0}
-    .icon{
-      width:42px; height:42px; border-radius:16px;
-      display:grid; place-items:center;
-      background:rgba(78,161,255,.12);
-      border:1px solid rgba(78,161,255,.25);
-      margin-bottom:12px;
-      font-weight:1000;
-    }
-
-    /* OFFER */
-    .offer{
-      position:relative;
-      border-radius: var(--r2);
-      padding:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background:linear-gradient(135deg, rgba(78,161,255,.22) 0%, rgba(124,92,255,.18) 55%, rgba(255,255,255,.04) 100%);
-      box-shadow:0 24px 85px rgba(78,161,255,.18);
-      overflow:hidden;
-    }
-    .offerTop{display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap}
-    .badge{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 12px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.05);
-      font-weight:950;
-      font-size:13px;
-    }
-    .price{
-      font-size:46px;
-      font-weight:1000;
-      letter-spacing:-1px;
-      margin:10px 0 6px 0;
-    }
-    .sub{color:var(--muted); font-size:13px; line-height:1.6}
-    .check{
-      display:flex; gap:10px; align-items:flex-start; color:var(--muted);
-      margin-top:10px; line-height:1.6;
-    }
-    .check svg{flex:0 0 auto; margin-top:2px}
-
-    /* BEFORE / AFTER SLIDER */
-    .baWrap{padding:0; overflow:hidden}
-    .baHeader{padding:14px 16px 0 16px}
-    .baTitle{font-weight:1000}
-    .baSub{color:var(--muted); font-size:13px; margin-top:6px; line-height:1.5}
-    .ba{
-      position:relative;
-      width:100%;
-      aspect-ratio: 1 / 1;
-      background:#000;
-      margin-top:12px;
-      overflow:hidden;
-      border-top:1px solid rgba(255,255,255,.08);
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    .ba img{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      object-fit:cover;
-      user-select:none;
-      -webkit-user-drag:none;
-      cursor: zoom-in;
-    }
-    .ba .after{
-      clip-path: inset(0 0 0 var(--cut, 50%));
-    }
-    .ba .line{
-      position:absolute; top:0; bottom:0;
-      left:var(--cut, 50%);
-      width:2px;
-      background:rgba(255,255,255,.75);
-      box-shadow:0 0 0 6px rgba(255,255,255,.08);
-      pointer-events:none;
-    }
-    .ba .knob{
-      position:absolute;
-      top:50%;
-      left:var(--cut, 50%);
-      transform: translate(-50%,-50%);
-      width:44px; height:44px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.25);
-      background:rgba(5,8,20,.65);
-      backdrop-filter: blur(10px);
-      display:grid; place-items:center;
-      pointer-events:none;
-    }
-    .ba .knob span{
-      font-weight:1000;
-      font-size:12px;
-      color:rgba(255,255,255,.95);
-    }
-    .baCtrl{
-      display:flex; gap:10px; align-items:center; justify-content:space-between;
-      padding:12px 16px;
-    }
-    .baCtrl input[type="range"]{
-      width:100%;
-      accent-color: var(--brand);
-    }
-    .pillMini{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.18);
-      color:var(--muted);
-      font-size:12px;
-      white-space:nowrap;
-    }
-
-    /* FAQ */
-    details{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      border-radius:16px;
-      padding:12px 14px;
-    }
-    details summary{cursor:pointer; font-weight:950}
-    details p{margin:8px 0 0 0; color:var(--muted); line-height:1.6}
-
-    /* LIGHTBOX */
-    .lightbox{
-      position:fixed; inset:0; z-index:9999;
-      background: rgba(0,0,0,.72);
-      backdrop-filter: blur(8px);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-    }
-    .lightbox.on{display:flex}
-    .lightbox .box{
-      max-width:min(980px, 96vw);
-      width:100%;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(5,8,20,.75);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .lightbox .top{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding:12px 14px;
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    .lightbox .top b{font-weight:950}
-    .lightbox .top button{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      border-radius:12px;
-      padding:10px 12px;
-      cursor:pointer;
-      font-weight:900;
-    }
-    .lightbox img{
-      width:100%;
-      height:auto;
-      display:block;
-    }
-
-    /* Sticky WhatsApp */
-    .stickyCta{
-      position:fixed; right:16px; bottom:16px; z-index:999;
-      display:flex; gap:10px; align-items:center;
-    }
-    .bubble{
-      display:none;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(5,8,20,.78);
-      backdrop-filter: blur(10px);
-      color:var(--muted);
-      box-shadow: var(--shadow);
-      max-width: 280px;
-      font-size:13px;
-    }
-    @media (min-width: 820px){ .bubble{display:block} }
-
-    /* Reveal */
-    .reveal{opacity:0; transform: translateY(10px); transition: opacity .55s ease, transform .55s ease}
-    .reveal.on{opacity:1; transform: translateY(0)}
-
-    /* Footer */
-    footer{
-      padding:26px 0 34px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.6;
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      *{transition:none !important; animation:none !important; scroll-behavior:auto !important}
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kitty Fit Love</title>
+  <meta name="description" content="Site fofo e profissional de treino e alimentação, em tons de rosa com clima Hello Kitty, feito por xaxau para ela.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="wrap nav">
-      <div class="brand">
-        <div class="logo"></div>
-        <div>Thiarlys • Planilha de Treino</div>
-      </div>
-
-      <nav class="links">
-        <a href="#produto">Produto</a>
-        <a href="#evolucao">Evolução</a>
-        <a href="#como">Compra</a>
-        <a href="#faq">FAQ</a>
-      </nav>
-
-      <button class="btn whats small" id="btnTopZap">Comprar no WhatsApp</button>
+  <div class="page-bg"></div>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-bow"></div>
+      <span>Kitty Fit Love</span>
     </div>
-  </div>
+    <nav>
+      <a href="#inicio">Início</a>
+      <a href="#treino">Treino</a>
+      <a href="#dieta">Dieta</a>
+      <a href="#galeria">Fotos</a>
+      <a href="#mensagem">Mensagem</a>
+    </nav>
+  </header>
 
-  <!-- HERO -->
-  <div class="wrap hero">
-    <div class="heroGrid">
-      <div class="panel heroLeft reveal">
-        <div class="pill"><span class="dot"></span> Produto digital • planilha para registrar treino e evolução</div>
-        <h1>Treine com <span class="grad">clareza</span>: registre cargas, reps e progresso sem bagunça.</h1>
-        <p class="heroText">
-          Você para de “chutar” o que fez no último treino. A planilha organiza seu dia, registra histórico e te dá visão de evolução.
-          Perfeita pra usar no celular (Google Sheets) ou no PC (Excel).
+  <main>
+    <section class="hero section" id="inicio">
+      <div class="hero-copy">
+        <span class="pill">feito por xaxau · rosa · hello kitty · carinho de verdade</span>
+        <h1>Um site lindo, fofo e bem feito <span>pra cuidar dela</span>.</h1>
+        <p>
+          Eu fiz esse cantinho pra você com carinho de verdade, do jeitinho que combina com você:
+          rosa, delicado, lindo, organizado e com aquela energia Hello Kitty que você ama.
+          Aqui ficou tudo mais explicadinho: treino, alimentação, rotina e suas fotos deixando o presente ainda mais especial.
         </p>
-
-        <div class="ctaRow">
-          <button class="btn whats" id="btnHeroZap">Quero comprar por R$ <span id="precoHero">20</span></button>
-          <a class="btn primary" href="#produto">Ver o que vem</a>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#treino">Ver treino certinho</a>
+          <a class="btn btn-secondary" href="#dieta">Ver a dieta</a>
         </div>
-
-        <div class="stats">
-          <div class="stat">
-            <b>Checklist</b>
-            <div>marca séries concluídas</div>
-          </div>
-          <div class="stat">
-            <b>Histórico</b>
-            <div>cargas e reps guardadas</div>
-          </div>
-          <div class="stat">
-            <b>Resumo</b>
-            <div>visão semanal/mensal</div>
+        <div class="stats-row">
+          <article>
+            <strong>50 kg</strong>
+            <span>Peso atual</span>
+          </article>
+          <article>
+            <strong>1,49 m</strong>
+            <span>Altura</span>
+          </article>
+          <article>
+            <strong>meta</strong>
+            <span>saúde, força, rotina e bem-estar</span>
+          </article>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card main-photo float-a">
+          <img src="assets/foto-1.jpg" alt="Foto dela sorrindo">
+        </div>
+        <div class="hero-card side-photo float-b">
+          <img src="assets/foto-3.jpg" alt="Foto dela apoiando o rosto com delicadeza">
+        </div>
+        <div class="kitty-badge" aria-hidden="true">
+          <div class="kitty-face">
+            <span class="ear ear-left"></span>
+            <span class="ear ear-right"></span>
+            <span class="eye eye-left"></span>
+            <span class="eye eye-right"></span>
+            <span class="nose"></span>
+            <span class="whisker w1"></span>
+            <span class="whisker w2"></span>
+            <span class="whisker w3"></span>
+            <span class="whisker w4"></span>
+            <span class="whisker w5"></span>
+            <span class="whisker w6"></span>
+            <span class="bow-mini"></span>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="panel heroRight reveal">
-        <div class="miniCard">
-          <div class="miniTop">
-            <div>
-              <div style="font-weight:1000">O que você recebe</div>
-              <div class="muted tiny">Entrega por WhatsApp/Drive</div>
-            </div>
-            <div class="tag">R$ 20</div>
-          </div>
-          <div class="hr"></div>
-          <ul class="list">
-            <li>Planilha pronta (Excel + Google Sheets)</li>
-            <li>Campos: séries, reps, carga, descanso, RPE</li>
-            <li>Histórico + resumo de evolução</li>
-            <li>Guia rápido de uso (1 página)</li>
+    <section class="section intro-grid">
+      <article class="card soft-card">
+        <h2>Um presente do xaxau</h2>
+        <p>
+          Não é só um site bonito. É um presente feito por mim pra te ver mais feliz, mais animada e com tudo mais fácil de entender.
+        </p>
+      </article>
+      <article class="card soft-card highlight-card">
+        <h2>Treino explicado</h2>
+        <p>
+          Agora os exercícios estão organizados por dia, com foco, ordem e explicação simples do que fazer e do que cada treino trabalha.
+        </p>
+      </article>
+      <article class="card soft-card">
+        <h2>Dieta suave e pensada com carinho</h2>
+        <p>
+          Como você me falou que é anêmica e a ideia é começar de leve, eu deixei a alimentação mais simples, gostosa e fácil de repetir no dia a dia, sem exagero nem pressão.
+        </p>
+      </article>
+    </section>
+
+    <section class="section why-section">
+      <div class="section-heading">
+        <span class="mini-pill">como usar</span>
+        <h2>Um plano fofo, mas de verdade</h2>
+        <p>
+          A ideia é deixar sua rotina clara: treinar com calma, comer bem sem complicar, descansar e ir melhorando aos pouquinhos.
+        </p>
+      </div>
+      <div class="why-grid">
+        <article class="why-card">
+          <h3>1. Treinar sem se perder</h3>
+          <p>Seguir os dias já montados, focando mais em execução bonitinha do que em pressa.</p>
+        </article>
+        <article class="why-card">
+          <h3>2. Comer de forma simples</h3>
+          <p>Montar pratos com proteína, carboidrato bom e frutas/legumes sem precisar inventar moda.</p>
+        </article>
+        <article class="why-card">
+          <h3>3. Ir no seu ritmo</h3>
+          <p>Não precisa ser perfeito. O mais lindo é a constância e o cuidado com você mesma.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section split-section" id="treino">
+      <div class="section-heading">
+        <span class="mini-pill">treino semanal</span>
+        <h2>Treino explicado de um jeito fácil</h2>
+        <p>
+          Aqui está o plano mais organizado: o que treinar, como começar, quantas séries fazer e em que parte do corpo cada dia foca.
+        </p>
+      </div>
+
+      <div class="guide-grid">
+        <article class="guide-card">
+          <h3>Antes de começar</h3>
+          <ul>
+            <li>Começar com 5 a 8 minutos de caminhada ou bicicleta leve.</li>
+            <li>Usar uma carga em que dê para fazer o movimento bonito, sem pressa.</li>
+            <li>Descansar 45 a 90 segundos entre séries.</li>
+            <li>Se um exercício parecer difícil, começar sem peso ou com halter leve.</li>
           </ul>
-        </div>
-
-        <div class="miniCard">
-          <div style="font-weight:1000">Pedido rápido</div>
-          <div class="muted tiny">Mensagem automática no WhatsApp</div>
-          <div class="hr"></div>
-
-          <label class="tiny muted">Seu nome</label>
-          <input id="nome" placeholder="Ex: João" />
-
-          <label class="tiny muted" style="margin-top:10px; display:block;">Objetivo</label>
-          <select id="objetivo">
-            <option value="Hipertrofia">Hipertrofia</option>
-            <option value="Emagrecimento">Emagrecimento</option>
-            <option value="Força">Força</option>
-            <option value="Condicionamento">Condicionamento</option>
-          </select>
-
-          <label class="tiny muted" style="margin-top:10px; display:block;">Usar em:</label>
-          <select id="uso">
-            <option value="Celular (Google Sheets)">Celular (Google Sheets)</option>
-            <option value="PC (Excel)">PC (Excel)</option>
-            <option value="Ambos">Ambos</option>
-          </select>
-
-          <div class="ctaRow" style="margin-top:12px">
-            <button class="btn primary" id="btnAsk">Tirar dúvida</button>
-            <button class="btn whats" id="btnMiniZap">Comprar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PRODUTO -->
-  <div class="wrap">
-    <section id="produto">
-      <div class="sectionTitle">
-        <h2 class="reveal">Produto</h2>
-        <div class="muted tiny reveal">Planilha (template) para organizar e registrar treinos.</div>
+        </article>
+        <article class="guide-card">
+          <h3>Como evoluir</h3>
+          <ul>
+            <li>Se completar tudo com facilidade, aumentar um pouquinho o peso na semana seguinte.</li>
+            <li>Se estiver muito cansada, reduzir 1 série e manter a técnica certinha.</li>
+            <li>Treinar 3 ou 4 vezes por semana já está ótimo.</li>
+            <li>Focar em constância antes de pensar em intensidade alta.</li>
+          </ul>
+        </article>
       </div>
 
-      <div class="offer reveal">
-        <div class="offerTop">
-          <div>
-            <div class="badge">Planilha de Treino (Premium)</div>
-            <div class="price">R$ <span id="preco">20</span></div>
-            <div class="sub">Entrega por WhatsApp/Drive após confirmação do pagamento.</div>
-          </div>
+      <div class="training-grid training-grid-2">
+        <article class="plan-card">
+          <h3>Dia 1 · Pernas & glúteos</h3>
+          <p class="plan-intro">Dia para trabalhar coxas, glúteos e base do corpo.</p>
+          <ol>
+            <li><strong>Agachamento goblet</strong> · 3x10 a 12 — segura um peso na frente do corpo e desce com controle.</li>
+            <li><strong>Elevação pélvica</strong> · 4x10 a 12 — aperta bem os glúteos lá em cima.</li>
+            <li><strong>Afundo parado</strong> · 3x8 a 10 cada perna — ótimo para pernas e equilíbrio.</li>
+            <li><strong>Abdução com miniband</strong> · 3x15 — ajuda a ativar glúteo lateral.</li>
+            <li><strong>Panturrilha em pé</strong> · 3x15 a 20 — subir e descer bem controlado.</li>
+          </ol>
+        </article>
 
-          <div style="max-width:420px">
-            <div class="sub">
-              Você compra e recebe o arquivo + instruções rápidas de uso.
-              Suporte limitado a dúvidas de uso da planilha.
-            </div>
-            <div class="ctaRow" style="margin-top:12px">
-              <button class="btn whats" id="btnBuy">Comprar agora</button>
-              <a class="btn" href="#como">Como funciona</a>
-            </div>
-          </div>
-        </div>
+        <article class="plan-card">
+          <h3>Dia 2 · Costas, braços & postura</h3>
+          <p class="plan-intro">Dia para deixar costas fortes, postura bonita e braços mais firmes.</p>
+          <ol>
+            <li><strong>Remada baixa ou com elástico</strong> · 3x10 a 12 — puxar com as costas, não só com os braços.</li>
+            <li><strong>Puxada frontal</strong> · 3x10 a 12 — ajuda a abrir as costas.</li>
+            <li><strong>Desenvolvimento com halter leve</strong> · 3x10 — para ombros.</li>
+            <li><strong>Rosca bíceps</strong> · 3x12 — movimento simples e controlado.</li>
+            <li><strong>Prancha</strong> · 3x20 a 30 segundos — fortalecer abdômen e postura.</li>
+          </ol>
+        </article>
 
-        <div class="hr"></div>
+        <article class="plan-card">
+          <h3>Dia 3 · Glúteos foco</h3>
+          <p class="plan-intro">Dia para caprichar mais no glúteo e no posterior de coxa.</p>
+          <ol>
+            <li><strong>Hip thrust</strong> · 4x10 — o principal desse dia.</li>
+            <li><strong>Stiff romeno</strong> · 3x10 — descer com costas retas e sentir a parte de trás da perna.</li>
+            <li><strong>Passada andando ou parada</strong> · 3x10 cada perna.</li>
+            <li><strong>Kickback</strong> · 3x12 a 15 — foco em glúteo.</li>
+            <li><strong>Abdução sentada</strong> · 3x15 — finalizar com queima boa.</li>
+          </ol>
+        </article>
 
-        <div class="grid3" style="margin-top:12px">
-          <div class="card" style="background:rgba(0,0,0,.18)">
-            <h3>O que tem dentro</h3>
-            <div class="check">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M20 6L9 17l-5-5" stroke="white" opacity=".85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              Aba “Treinos” por dia (checklist)
-            </div>
-            <div class="check">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M20 6L9 17l-5-5" stroke="white" opacity=".85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              Aba “Histórico” (carga/reps/notas)
-            </div>
-            <div class="check">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M20 6L9 17l-5-5" stroke="white" opacity=".85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              Aba “Resumo” (evolução semanal/mensal)
-            </div>
-          </div>
-
-          <div class="card" style="background:rgba(0,0,0,.18)">
-            <h3>Por que funciona</h3>
-            <ul class="list">
-              <li>Você repete o que dá resultado</li>
-              <li>Você registra progressão real</li>
-              <li>Você evita “treino aleatório”</li>
-            </ul>
-          </div>
-
-          <div class="card" style="background:rgba(0,0,0,.18)">
-            <h3>Entrega</h3>
-            <div class="sub">
-              Envio por WhatsApp/Drive após confirmação. Inclui guia rápido de uso.
-            </div>
-            <div class="check">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M12 6v6l4 2" stroke="white" opacity=".85" stroke-width="2" stroke-linecap="round"/>
-                <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="white" opacity=".85" stroke-width="2"/>
-              </svg>
-              Você recebe e já consegue usar no mesmo dia
-            </div>
-          </div>
-        </div>
+        <article class="plan-card">
+          <h3>Dia 4 · Abdômen, mobilidade & cardio leve</h3>
+          <p class="plan-intro">Dia mais leve para manter o corpo ativo sem pesar demais.</p>
+          <ol>
+            <li><strong>Prancha frontal</strong> · 3x20 a 30 segundos.</li>
+            <li><strong>Dead bug</strong> · 3x10 cada lado — ótimo para coordenação e abdômen.</li>
+            <li><strong>Abdominal infra controlado</strong> · 3x12.</li>
+            <li><strong>Caminhada ou bike leve</strong> · 15 a 25 minutos.</li>
+            <li><strong>Alongamento final</strong> · 5 minutos para pernas, quadril e costas.</li>
+          </ol>
+        </article>
       </div>
     </section>
 
-    <!-- EVOLUÇÃO (B/A SLIDERS) -->
-    <section id="evolucao">
-      <div class="sectionTitle">
-        <h2 class="reveal">Evolução</h2>
-        <div class="muted tiny reveal">Arraste o slider para comparar “antes/depois”.</div>
+    <section class="section metrics-section">
+      <div class="section-heading left">
+        <span class="mini-pill">mini metas</span>
+        <h2>Metas bonitas e possíveis</h2>
       </div>
-
-      <div class="grid2">
-        <!-- BA 1 -->
-        <div class="card baWrap reveal" data-ba="1">
-          <div class="baHeader">
-            <div class="baTitle">Aluno A. (iniciais)</div>
-            <div class="baSub">Exemplo de evolução registrada ao longo do tempo. Clique na imagem para ampliar.</div>
-          </div>
-
-          <div class="ba" style="--cut:50%;">
-            <img class="before" src="assets/evolucao_01.jpg" alt="Antes" data-lightbox="Evolução 01"/>
-            <img class="after"  src="assets/evolucao_01.jpg" alt="Depois" data-lightbox="Evolução 01"/>
-            <div class="line"></div>
-            <div class="knob"><span class="pct">50%</span></div>
-          </div>
-
-          <div class="baCtrl">
-            <span class="pillMini">Antes</span>
-            <input class="range" type="range" min="0" max="100" value="50" />
-            <span class="pillMini">Depois</span>
-          </div>
-        </div>
-
-        <!-- BA 2 -->
-        <div class="card baWrap reveal" data-ba="2">
-          <div class="baHeader">
-            <div class="baTitle">Aluno B. (iniciais)</div>
-            <div class="baSub">Mais consistência, melhor execução e registro do treino. Clique para ampliar.</div>
-          </div>
-
-          <div class="ba" style="--cut:50%;">
-            <img class="before" src="assets/evolucao_02.jpg" alt="Antes" data-lightbox="Evolução 02"/>
-            <img class="after"  src="assets/evolucao_02.jpg" alt="Depois" data-lightbox="Evolução 02"/>
-            <div class="line"></div>
-            <div class="knob"><span class="pct">50%</span></div>
-          </div>
-
-          <div class="baCtrl">
-            <span class="pillMini">Antes</span>
-            <input class="range" type="range" min="0" max="100" value="50" />
-            <span class="pillMini">Depois</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="muted tiny reveal" style="margin-top:10px">
-        Dica: se você tiver fotos “antes” e “depois” separadas, eu te mando a versão que usa dois arquivos por aluno (antes.jpg + depois.jpg).
+      <div class="metrics-grid">
+        <article class="metric-card">
+          <strong>3–4x</strong>
+          <span>treinos por semana</span>
+        </article>
+        <article class="metric-card">
+          <strong>7–9h</strong>
+          <span>sono por noite</span>
+        </article>
+        <article class="metric-card">
+          <strong>2L+</strong>
+          <span>água ao longo do dia</span>
+        </article>
+        <article class="metric-card">
+          <strong>1 passo</strong>
+          <span>de cada vez, sem pressão</span>
+        </article>
       </div>
     </section>
 
-    <!-- COMO COMPRAR -->
-    <section id="como">
-      <div class="sectionTitle">
-        <h2 class="reveal">Como comprar</h2>
-        <div class="muted tiny reveal">Rápido e direto.</div>
+    <section class="section split-layout" id="dieta">
+      <div class="left-pane">
+        <span class="mini-pill">alimentação</span>
+        <h2>Dieta suave e pensada pra começar de leve</h2>
+        <p>
+          Como você me falou que é anêmica, aqui a ideia não é fazer nada pesado nem chato.
+          Eu montei refeições simples, gostosas e fáceis de repetir,
+          dando mais espaço para fontes de ferro no dia a dia e juntando isso com comida que dê energia para treinar sem pesar.
+        </p>
+        <div class="food-note">
+          <h3>Base simples do prato</h3>
+          <p><strong>Ferro e proteína:</strong> feijão, lentilha, frango, carne moída, sardinha e, se ela gostar, fígado 1 vez na semana.</p>
+          <p><strong>Energia pro dia:</strong> arroz, batata, cuscuz, pão, aveia, macarrão simples e frutas.</p>
+          <p><strong>Ajuda na absorção:</strong> laranja, acerola, limão, tomate e outras frutas ricas em vitamina C junto das refeições principais.</p>
+        </div>
       </div>
 
-      <div class="grid3">
-        <div class="card reveal">
-          <div class="icon">1</div>
-          <h3>Chama no WhatsApp</h3>
-          <div class="muted">Eu mando as instruções de pagamento.</div>
-        </div>
-        <div class="card reveal">
-          <div class="icon">2</div>
-          <h3>Pagamento</h3>
-          <div class="muted">Pix/transferência (você escolhe).</div>
-        </div>
-        <div class="card reveal">
-          <div class="icon">3</div>
-          <h3>Entrega</h3>
-          <div class="muted">Eu envio a planilha + guia (WhatsApp/Drive).</div>
-        </div>
+      <div class="right-pane food-grid">
+        <article class="food-card">
+          <h3>Café da manhã</h3>
+          <p>Pão com queijo, cuscuz com queijo, vitamina de banana com aveia ou iogurte com fruta. Começo simples e leve.</p>
+        </article>
+        <article class="food-card">
+          <h3>Almoço</h3>
+          <p>Arroz + feijão + frango ou carne moída + couve, tomate ou salada simples. Se der, terminar com uma fruta cítrica.</p>
+        </article>
+        <article class="food-card">
+          <h3>Lanche</h3>
+          <p>Banana com aveia, pão com queijo, iogurte com fruta ou vitamina caseira. Tudo leve, gostoso e fácil de manter.</p>
+        </article>
+        <article class="food-card">
+          <h3>Jantar</h3>
+          <p>Repetir o almoço em porção menor, sopa de feijão ou lentilha com frango, ou sanduíche com frango desfiado e tomate.</p>
+        </article>
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section id="faq">
-      <div class="sectionTitle">
-        <h2 class="reveal">FAQ</h2>
-        <div class="muted tiny reveal">Dúvidas comuns.</div>
+    <section class="section menu-section">
+      <div class="section-heading">
+        <span class="mini-pill">ideias de refeição</span>
+        <h2>Comidinhas fofas, suaves e fáceis de amar</h2>
+        <p>Um começo de leve, com comida de verdade, carinho e rotina gostosa de seguir.</p>
       </div>
-
-      <div class="grid3">
-        <details class="reveal">
-          <summary>Funciona no celular?</summary>
-          <p>Sim. Você pode usar no Google Sheets. Também funciona no Excel no PC.</p>
-        </details>
-        <details class="reveal">
-          <summary>É consultoria?</summary>
-          <p>Não. É um produto digital (planilha/template) para organização e registro do treino.</p>
-        </details>
-        <details class="reveal">
-          <summary>Como recebo?</summary>
-          <p>Após confirmar o pagamento, eu envio por WhatsApp/Drive + um guia rápido de uso.</p>
-        </details>
+      <div class="menu-grid">
+        <article class="menu-card">
+          <h3>Ideias pro dia a dia</h3>
+          <ul>
+            <li>Arroz, feijão e frango desfiado</li>
+            <li>Arroz, feijão e carne moída</li>
+            <li>Sopa de lentilha com legumes</li>
+            <li>Cuscuz com queijo e fruta</li>
+          </ul>
+        </article>
+        <article class="menu-card">
+          <h3>Antes do treino</h3>
+          <ul>
+            <li>Banana com aveia</li>
+            <li>Pão com queijo</li>
+            <li>Iogurte com fruta</li>
+            <li>Cuscuz pequeno com queijo</li>
+          </ul>
+        </article>
+        <article class="menu-card">
+          <h3>Depois do treino</h3>
+          <ul>
+            <li>Almoço com arroz, feijão e proteína</li>
+            <li>Vitamina de banana com aveia</li>
+            <li>Pão com frango desfiado</li>
+            <li>Iogurte com fruta e aveia</li>
+          </ul>
+        </article>
+        <article class="menu-card">
+          <h3>Lanchinhos leves</h3>
+          <ul>
+            <li>Banana</li>
+            <li>Maçã</li>
+            <li>Pão com queijo</li>
+            <li>Aveia com fruta</li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <footer class="reveal">
-      © <span id="year"></span> Thiarlys • WhatsApp: <b>+55 28 99932-6660</b><br/>
-      Observação: produto digital (template). Para usar imagens de alunos, tenha autorização. Resultados variam por consistência, dieta e sono.
-    </footer>
-  </div>
-
-  <!-- Sticky WhatsApp -->
-  <div class="stickyCta">
-    <div class="bubble">Quer comprar a planilha? Me chama aqui.</div>
-    <button class="btn whats" id="btnSticky">WhatsApp</button>
-  </div>
-
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox">
-    <div class="box">
-      <div class="top">
-        <b id="lbTitle">Imagem</b>
-        <button id="lbClose">Fechar</button>
+    <section class="section menu-section">
+      <div class="section-heading">
+        <span class="mini-pill">organização</span>
+        <h2>Lista simples pra deixar a rotina mais fácil</h2>
+        <p>Uma base simples para a semana, pensando em começar bem devagar e sem complicar.</p>
       </div>
-      <img id="lbImg" alt="Imagem ampliada" />
-    </div>
-  </div>
+      <div class="menu-grid">
+        <article class="menu-card">
+          <h3>Proteínas fáceis de incluir</h3>
+          <ul>
+            <li>Frango</li>
+            <li>Carne moída quando estiver em promoção</li>
+            <li>Sardinha</li>
+            <li>Feijão e lentilha</li>
+          </ul>
+        </article>
+        <article class="menu-card">
+          <h3>Carboidratos simples</h3>
+          <ul>
+            <li>Arroz</li>
+            <li>Batata</li>
+            <li>Cuscuz</li>
+            <li>Aveia e pão</li>
+          </ul>
+        </article>
+        <article class="menu-card">
+          <h3>Frutas e verduras úteis</h3>
+          <ul>
+            <li>Banana</li>
+            <li>Laranja</li>
+            <li>Tomate</li>
+            <li>Couve quando der</li>
+          </ul>
+        </article>
+        <article class="menu-card">
+          <h3>Jeitinho de ajudar o ferro</h3>
+          <ul>
+            <li>Colocar limão no feijão ou na salada</li>
+            <li>Comer laranja depois do almoço</li>
+            <li>Evitar café, leite ou chá bem perto do almoço e do jantar</li>
+            <li>Se ela já tiver orientação médica, seguir certinho</li>
+          </ul>
+        </article>
+      </div>
+    </section>
 
-  <script>
-    // ===== CONFIG =====
-    const WHATSAPP_NUMBER = "5528999326660";
-    const PRICE = 20;
+    <section class="section habits-section">
+      <div class="section-heading">
+        <span class="mini-pill">rotina</span>
+        <h2>Pequenos hábitos que deixam tudo mais bonito</h2>
+      </div>
+      <div class="habits-grid">
+        <article class="habit-card">
+          <h3>Água sempre por perto</h3>
+          <p>Deixar uma garrafinha linda perto de você ajuda muito a beber água sem perceber.</p>
+        </article>
+        <article class="habit-card">
+          <h3>Preparar o café da manhã</h3>
+          <p>Separar frutas, iogurte, pão ou tapioca no dia anterior deixa a manhã mais leve e fácil.</p>
+        </article>
+        <article class="habit-card">
+          <h3>Treinar sem cobrança</h3>
+          <p>Seu treino não precisa ser perfeito. Ele só precisa acontecer com carinho e constância.</p>
+        </article>
+        <article class="habit-card">
+          <h3>Sono de princesa</h3>
+          <p>Descansar bem ajuda no humor, na recuperação do corpo e na energia do dia seguinte.</p>
+        </article>
+      </div>
+    </section>
 
-    // ===== WhatsApp helpers =====
-    function openWhats(extra=""){
-      const nome = (document.getElementById("nome")?.value || "").trim() || "Cliente";
-      const objetivo = (document.getElementById("objetivo")?.value || "Hipertrofia").trim();
-      const uso = (document.getElementById("uso")?.value || "Celular (Google Sheets)").trim();
+    <section class="section gallery-section" id="galeria">
+      <div class="section-heading">
+        <span class="mini-pill">galeria</span>
+        <h2>As fotos dela deixando tudo mais fofo</h2>
+        <p>Mais organizada, mais bonita e mais pessoal, do jeitinho que um presente especial merece.</p>
+      </div>
+      <div class="gallery-grid gallery-grid-6">
+        <figure class="gallery-card large"><img src="assets/foto-1.jpg" alt="Foto dela sorrindo"></figure>
+        <figure class="gallery-card"><img src="assets/foto-2.jpg" alt="Foto dela olhando para a câmera"></figure>
+        <figure class="gallery-card"><img src="assets/foto-3.jpg" alt="Foto dela apoiando o rosto"></figure>
+        <figure class="gallery-card tall"><img src="assets/foto-4.jpg" alt="Foto dela sorrindo em selfie"></figure>
+      </div>
+    </section>
 
-      const msg =
-        `Olá! Eu sou ${nome}. Quero COMPRAR a Planilha de Treino (R$ ${PRICE}).\\n` +
-        `Objetivo: ${objetivo}\\n` +
-        `Vou usar em: ${uso}\\n` +
-        `${extra}`.trim();
+    <section class="section closing-section" id="mensagem">
+      <div class="closing-card">
+        <span class="mini-pill">mensagem final</span>
+        <h2>Eu quis fazer um cantinho bonito só pra você.</h2>
+        <p>
+          Eu arrumei esse site com mais cuidado, com as fotos que você mais gosta, treino mais explicadinho e uma alimentação mais suave,
+          simples e delicada, porque queria que ficasse a sua cara: fofo, bonito, delicado e especial.
+        </p>
+        <p>
+          É meu jeitinho de te lembrar que você merece se cuidar com leveza, se olhar com carinho e ter um lugar lindo só seu.
+        </p>
+        <p class="signed-note">Com amor, <strong>xaxau</strong> 💗</p>
+        <a class="btn btn-primary" href="#inicio">Voltar ao topo</a>
+      </div>
+    </section>
+  </main>
 
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
-    }
+  <footer class="footer">
+    <p>Feito por <strong>xaxau</strong>, com carinho de verdade, para a menina que ele ama.</p>
+  </footer>
 
-    document.getElementById("btnTopZap").onclick = () => openWhats("Vim pelo site.");
-    document.getElementById("btnHeroZap").onclick = () => openWhats("Quero comprar agora.");
-    document.getElementById("btnMiniZap").onclick = () => openWhats("Me envie as instruções de pagamento e entrega.");
-    document.getElementById("btnBuy").onclick = () => openWhats("Quero comprar. Como faço o pagamento?");
-    document.getElementById("btnAsk").onclick = () => openWhats("Tenho uma dúvida antes de comprar.");
-    document.getElementById("btnSticky").onclick = () => openWhats("Quero comprar a planilha.");
-
-    // Set price in hero (só visual)
-    document.getElementById("precoHero").textContent = String(PRICE);
-    document.getElementById("preco").textContent = String(PRICE);
-
-    // ===== Year =====
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    // ===== Reveal animation =====
-    const obs = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add("on"); });
-    }, {threshold: 0.12});
-    document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
-
-    // ===== Before/After sliders =====
-    document.querySelectorAll(".baWrap").forEach((wrap)=>{
-      const ba = wrap.querySelector(".ba");
-      const range = wrap.querySelector(".range");
-      const pctEl = wrap.querySelector(".pct");
-
-      function set(v){
-        ba.style.setProperty("--cut", v + "%");
-        pctEl.textContent = v + "%";
-      }
-      set(range.value);
-
-      range.addEventListener("input", () => set(range.value));
-
-      // Drag anywhere on image to move slider (profissional)
-      let dragging = false;
-
-      function pointerToValue(clientX){
-        const rect = ba.getBoundingClientRect();
-        const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
-        return Math.round((x / rect.width) * 100);
-      }
-
-      ba.addEventListener("pointerdown", (e)=>{
-        dragging = true;
-        ba.setPointerCapture(e.pointerId);
-        const v = pointerToValue(e.clientX);
-        range.value = v;
-        set(v);
-      });
-
-      ba.addEventListener("pointermove", (e)=>{
-        if(!dragging) return;
-        const v = pointerToValue(e.clientX);
-        range.value = v;
-        set(v);
-      });
-
-      ba.addEventListener("pointerup", ()=> dragging = false);
-      ba.addEventListener("pointercancel", ()=> dragging = false);
-    });
-
-    // ===== Lightbox =====
-    const lb = document.getElementById("lightbox");
-    const lbImg = document.getElementById("lbImg");
-    const lbTitle = document.getElementById("lbTitle");
-    const lbClose = document.getElementById("lbClose");
-
-    function openLightbox(src, title){
-      lbImg.src = src;
-      lbTitle.textContent = title || "Imagem";
-      lb.classList.add("on");
-    }
-    function closeLightbox(){
-      lb.classList.remove("on");
-      lbImg.src = "";
-    }
-
-    document.querySelectorAll("[data-lightbox]").forEach((img)=>{
-      img.addEventListener("click", ()=>{
-        openLightbox(img.getAttribute("src"), img.getAttribute("data-lightbox"));
-      });
-    });
-
-    lbClose.addEventListener("click", closeLightbox);
-    lb.addEventListener("click", (e)=>{
-      if(e.target === lb) closeLightbox();
-    });
-    window.addEventListener("keydown", (e)=>{
-      if(e.key === "Escape") closeLightbox();
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
